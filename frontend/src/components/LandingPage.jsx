@@ -1,27 +1,74 @@
-import React from 'react';
-import { Binary, Code, Database, Dna, ArrowRight, Download, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Binary, Code, Database, Dna, ArrowRight, Download, ChevronRight, User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DnaAnimation from './DnaAnimation';
 
-const Header = () => (
-  <header className="fixed w-full bg-transparent z-50">
-    <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-between h-16">
-        <div className="flex items-center">
-          <Dna className="h-8 w-8 text-indigo-600" />
-          <span className="ml-2 text-xl font-bold text-white">DNAStoreAI</span>
+const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Check if user is logged in (you'll need to implement this based on your auth system)
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('user');
+      if (token && userData) {
+        setIsLoggedIn(true);
+        setUser(JSON.parse(userData));
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const handleLogout = () => {
+    // Clear auth data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    setUser(null);
+    // Redirect to home page
+    window.location.href = '/';
+  };
+
+  return (
+    <header className="fixed w-full bg-transparent z-50">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Dna className="h-8 w-8 text-indigo-600" />
+            <span className="ml-2 text-xl font-bold text-white">DNAStoreAI</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Link to="/how-it-works" className="text-white hover:text-indigo-300">How It Works</Link>
+            <a href="#pricing" className="text-white hover:text-indigo-300">Pricing</a>
+            <a href="#docs" className="text-white hover:text-indigo-300">Documentation</a>
+            {isLoggedIn ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 bg-indigo-900/50 px-4 py-2 rounded-lg">
+                  <User className="h-5 w-5 text-indigo-400" />
+                  <span className="text-white">{user?.name || user?.email}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 text-white hover:text-indigo-300"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link to="/signin" className="px-4 py-2 text-white hover:text-indigo-300">Sign in</Link>
+                <Link to="/signup" className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Sign up</Link>
+              </>
+            )}
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Link to="/how-it-works" className="text-white hover:text-indigo-300">How It Works</Link>
-          <a href="#pricing" className="text-white hover:text-indigo-300">Pricing</a>
-          <a href="#docs" className="text-white hover:text-indigo-300">Documentation</a>
-          <Link to="/signin" className="px-4 py-2 text-white hover:text-indigo-300">Sign in</Link>
-          <Link to="/signup" className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Sign up</Link>
-        </div>
-      </div>
-    </nav>
-  </header>
-);
+      </nav>
+    </header>
+  );
+};
 
 const Hero = () => (
   <section className="relative h-screen bg-gradient-to-b from-indigo-900 to-black">
@@ -37,7 +84,7 @@ const Hero = () => (
           Convert your digital files into biologically viable DNA sequences using our ML-powered DNA Data Storage technology.
         </p>
         <div className="mt-10 flex justify-center space-x-4">
-          <Link to="/dna-encoder" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+          <Link to="/dna-operations" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
             Try It Now
           </Link>
           <Link to="/ml-model" className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-indigo-900 transition-colors">
