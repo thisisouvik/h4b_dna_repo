@@ -4,6 +4,8 @@ import LandingPage from './components/LandingPage';
 import HowItWorks from './components/HowItWorks';
 import MLModelExplanation from './components/MLModelExplanation';
 import DNAEncoder from './components/DNAEncoder';
+import DNAGateway from './components/DNAGateway';
+import DNADecoder from './components/DNADecoder';
 import Auth from './components/Auth';
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path="/signin" element={<Auth mode="signin" />} />
         <Route path="/signup" element={<Auth mode="signup" />} />
         <Route path="/dna-encoder" element={<DNAEncoder />} />
+        <Route path="/dna-decoder" element={<DNADecoder />} />
+        <Route path="/dna-operations" element={<DNAGateway />} />
       </Routes>
     </Router>
   );
