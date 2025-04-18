@@ -11,11 +11,10 @@ const HowItWorks = () => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Dna className="h-8 w-8 text-indigo-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">DNAcode</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">DNAStoreAI</span>
             </div>
             <div className="flex items-center space-x-4">
               <a href="/" className="text-gray-600 hover:text-gray-900">Home</a>
-              <a href="#features" className="text-gray-600 hover:text-gray-900">Features</a>
               <a href="#pricing" className="text-gray-600 hover:text-gray-900">Pricing</a>
               <a href="#docs" className="text-gray-600 hover:text-gray-900">Documentation</a>
             </div>
@@ -176,7 +175,7 @@ const HowItWorks = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center">
               <Dna className="h-8 w-8 text-indigo-600" />
-              <span className="ml-2 text-xl font-bold text-white">DNAcode</span>
+              <span className="ml-2 text-xl font-bold text-white">DNAStoreAI</span>
             </div>
             <div className="mt-6 md:mt-0 flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-300">Privacy</a>
@@ -186,7 +185,7 @@ const HowItWorks = () => {
           </div>
           <div className="mt-8 border-t border-gray-800 pt-8">
             <p className="text-base text-gray-400 text-center">
-              &copy; {new Date().getFullYear()} DNAcode. All rights reserved.
+              &copy; {new Date().getFullYear()} DNAStoreAI. All rights reserved.
             </p>
           </div>
         </div>
