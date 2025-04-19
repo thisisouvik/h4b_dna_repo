@@ -1,180 +1,134 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Dna } from 'lucide-react';
+import { Dna, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import DnaAnimation from './DnaAnimation';
 
-const Auth = ({ mode = 'signin' }) => {
+const Auth = ({ mode }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
     name: mode === 'signup' ? '' : undefined
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (mode === 'signup' && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
+    try {
+      // Here you would typically make an API call to your backend
+      console.log('Form submitted:', formData);
+      navigate('/dna-encoder');
+    } catch (err) {
+      setError(err.message || 'An error occurred');
     }
-
-    // Here you would typically make an API call to your backend
-    console.log('Form submitted:', formData);
-    
-    // For demo purposes, we'll just navigate to the home page
-    navigate('/');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <Dna className="h-12 w-12 text-indigo-600" />
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {mode === 'signin' ? 'Sign in to your account' : 'Create a new account'}
-        </h2>
-      </div>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Background Animation */}
+      <DnaAnimation />
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {mode === 'signup' && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <div className="mt-1">
+      {/* Main Content */}
+      <main className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full">
+          <div className="bg-indigo-900/50 backdrop-blur-sm rounded-xl p-8 shadow-xl">
+            <div className="text-center mb-8">
+              <Dna className="h-12 w-12 text-indigo-500 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-white">
+                {mode === 'signup' ? 'Create Account' : 'Welcome Back'}
+              </h1>
+              <p className="mt-2 text-indigo-200">
+                {mode === 'signup' 
+                  ? 'Join us to start encoding your data in DNA'
+                  : 'Sign in to continue your DNA encoding journey'}
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {mode === 'signup' && (
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-indigo-400" />
+                  </div>
                   <input
-                    id="name"
-                    name="name"
                     type="text"
-                    required
+                    name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Full Name"
+                    className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    required
                   />
                 </div>
-              </div>
-            )}
+              )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-indigo-400" />
+                </div>
                 <input
-                  id="email"
-                  name="email"
                   type="email"
-                  autoComplete="email"
-                  required
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Email Address"
+                  className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  required
                 />
               </div>
-            </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-indigo-400" />
+                </div>
                 <input
-                  id="password"
-                  name="password"
                   type="password"
-                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
-                  required
+                  name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Password"
+                  className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  required
                 />
               </div>
-            </div>
 
-            {mode === 'signup' && (
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                  Confirm Password
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
+              {error && (
+                <div className="text-red-400 text-sm text-center">
+                  {error}
                 </div>
-              </div>
-            )}
+              )}
 
-            {error && (
-              <div className="text-red-500 text-sm text-center">
-                {error}
-              </div>
-            )}
-
-            <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-900 transition-colors"
               >
-                {mode === 'signin' ? 'Sign in' : 'Sign up'}
+                {mode === 'signup' ? 'Create Account' : 'Sign In'}
               </button>
-            </div>
-          </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Or
-                </span>
-              </div>
-            </div>
+            </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                {mode === 'signin' ? (
-                  <>
-                    Don't have an account?{' '}
-                    <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-                      Sign up
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    Already have an account?{' '}
-                    <Link to="/signin" className="font-medium text-indigo-600 hover:text-indigo-500">
-                      Sign in
-                    </Link>
-                  </>
-                )}
+              <p className="text-indigo-200">
+                {mode === 'signup' ? 'Already have an account?' : "Don't have an account?"}
+                <Link
+                  to={mode === 'signup' ? '/signin' : '/signup'}
+                  className="ml-2 text-indigo-400 hover:text-indigo-300"
+                >
+                  {mode === 'signup' ? 'Sign In' : 'Create Account'}
+                </Link>
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

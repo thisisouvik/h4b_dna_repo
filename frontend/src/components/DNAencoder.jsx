@@ -13,7 +13,9 @@ import {
   ChevronDown,
   ChevronUp,
   Loader2,
-  X
+  X,
+  FileJson,
+  FileSpreadsheet
 } from 'lucide-react';
 
 const DNAEncoder = () => {
@@ -25,6 +27,8 @@ const DNAEncoder = () => {
   const [isVisible, setIsVisible] = useState(false);
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
+    name: '',
+    email: '',
     input: '',
     encodingMethod: 'ml',
     compression: true,
@@ -35,6 +39,7 @@ const DNAEncoder = () => {
       secondaryStructures: true
     }
   });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Trigger entrance animation
@@ -106,31 +111,56 @@ const DNAEncoder = () => {
   };
 
   const handleEncode = async () => {
+    if (!formData.input.trim()) {
+      setError('Please enter some text or upload a file');
+      return;
+    }
+
+    if (!formData.name || !formData.email) {
+      setError('Please provide your name and email');
+      return;
+    }
+
     setIsProcessing(true);
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Mock results
-    setResults({
-      sequence: 'ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG',
-      metrics: {
-        gcContent: 52.3,
-        encodedSize: 1000,
-        compressionRatio: 0.75
-      },
-      quality: {
-        status: 'success',
-        message: 'Sequence meets all optimization criteria'
+    setError(null);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/encode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          text: formData.input
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to encode text');
       }
-    });
-    
-    setIsProcessing(false);
+
+      setResults({
+        dnaSequence: data.dna_sequence,
+        usedML: data.used_ml,
+        encodingId: data.encoding_id
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleReset = () => {
     setResults(null);
     setSelectedFile(null);
     setFormData({
+      name: '',
+      email: '',
       input: '',
       encodingMethod: 'ml',
       compression: true,
@@ -146,19 +176,26 @@ const DNAEncoder = () => {
   const handleDownload = (format) => {
     if (!results) return;
 
-    let content = '';
-    let filename = '';
+    let content = results.dnaSequence;
+    let filename = 'dna_sequence';
+    let mimeType = 'text/plain';
 
-    if (format === 'dna') {
-      content = results.sequence;
-      filename = 'encoded_sequence.dna';
-    } else if (format === 'qr') {
-      // In a real implementation, this would generate a QR code
-      content = results.sequence;
-      filename = 'encoded_sequence_qr.png';
+    switch (format) {
+      case 'json':
+        filename += '.json';
+        mimeType = 'application/json';
+        content = JSON.stringify({ dna_sequence: content }, null, 2);
+        break;
+      case 'csv':
+        filename += '.csv';
+        mimeType = 'text/csv';
+        content = `DNA Sequence\n"${content}"`;
+        break;
+      default:
+        filename += '.txt';
     }
 
-    const blob = new Blob([content], { type: 'text/plain' });
+    const blob = new Blob([content], { type: mimeType });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -195,6 +232,33 @@ const DNAEncoder = () => {
             DNA Encoder
           </h1>
           
+          {/* User Info Form */}
+          <div className={`bg-indigo-900/50 backdrop-blur-sm rounded-xl p-6 mb-8 transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <h2 className="text-xl font-semibold text-white mb-4">Your Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Your Name"
+                  className="w-full bg-indigo-800/50 border border-indigo-700 rounded-lg px-4 py-2 text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Your Email"
+                  className="w-full bg-indigo-800/50 border border-indigo-700 rounded-lg px-4 py-2 text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Input Card */}
           <div className={`bg-indigo-900/50 backdrop-blur-sm rounded-xl p-6 mb-8 transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             {/* Tab Navigation */}
@@ -385,6 +449,14 @@ const DNAEncoder = () => {
             </button>
           </div>
 
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-900/50 backdrop-blur-sm rounded-xl p-4 mb-8 flex items-center">
+              <AlertCircle className="h-5 w-5 text-red-400 mr-2" />
+              <span className="text-red-200">{error}</span>
+            </div>
+          )}
+
           {/* Results Display */}
           {results && (
             <div className={`bg-indigo-900/50 backdrop-blur-sm rounded-xl p-6 transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
@@ -394,7 +466,7 @@ const DNAEncoder = () => {
               <div className="bg-indigo-800/50 rounded-lg p-4 mb-6 transition-all duration-300 hover:bg-indigo-800/70">
                 <h3 className="text-lg font-semibold text-white mb-2">DNA Sequence</h3>
                 <div className="font-mono text-sm text-indigo-200 overflow-x-auto">
-                  {results.sequence}
+                  {results.dnaSequence}
                 </div>
               </div>
 
@@ -426,17 +498,24 @@ const DNAEncoder = () => {
               <div className="flex flex-wrap gap-4 mb-6">
                 <button 
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-indigo-700"
-                  onClick={() => handleDownload('dna')}
+                  onClick={() => handleDownload('txt')}
                 >
-                  <Download className="inline-block mr-2" />
-                  Download .dna File
+                  <FileText className="inline-block mr-2" />
+                  Download .txt File
                 </button>
                 <button 
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-indigo-700"
-                  onClick={() => handleDownload('qr')}
+                  onClick={() => handleDownload('json')}
                 >
-                  <QrCode className="inline-block mr-2" />
-                  Download QR Code
+                  <FileJson className="inline-block mr-2" />
+                  Download .json File
+                </button>
+                <button 
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-indigo-700"
+                  onClick={() => handleDownload('csv')}
+                >
+                  <FileSpreadsheet className="inline-block mr-2" />
+                  Download .csv File
                 </button>
               </div>
 

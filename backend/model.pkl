@@ -1,0 +1,3 @@
+# This is a dummy model file
+# In a real implementation, this would contain your trained ML model
+# For now, we'll just use the dummy encoder in dna_encoder.py 
