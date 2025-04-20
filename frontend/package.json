@@ -1,5 +1,5 @@
 {
-  "name": "dna-project-frontend",
+  "name": "dna-encoder-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,9 +11,8 @@
     "lucide-react": "^0.330.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
+    "react-router-dom": "^6.22.1",
     "react-scripts": "5.0.1",
-    "tailwindcss": "^3.4.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -40,5 +39,10 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.0"
+  }
 }

@@ -1,12 +1,31 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-import os
+from dotenv import load_dotenv
 
-# Create SQLite database in the project root
-db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dna_encoding.db')
-engine = create_engine(f'sqlite:///{db_path}')
+load_dotenv()
+
+# Database configuration
+DB_TYPE = os.getenv('DB_TYPE', 'sqlite')  # Default to SQLite if not specified
+
+if DB_TYPE == 'postgresql':
+    # PostgreSQL configuration
+    DB_NAME = os.getenv('DB_NAME')
+    DB_USER = os.getenv('DB_USER')
+    DB_PASS = os.getenv('DB_PASS')
+    DB_HOST = os.getenv('DB_HOST')
+    DB_PORT = os.getenv('DB_PORT')
+    
+    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+else:
+    # SQLite configuration (fallback)
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dna_encoding.db')
+    DATABASE_URL = f'sqlite:///{db_path}'
+
+# Create engine
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

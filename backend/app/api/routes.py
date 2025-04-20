@@ -30,7 +30,16 @@ def encode_text():
             'success': True,
             'dna_sequence': dna_sequence,
             'used_ml': used_ml,
-            'encoding_id': encoding.id
+            'encoding_id': str(encoding.id),
+            'metrics': {
+                'length': len(dna_sequence),
+                'gcContent': round((dna_sequence.count('G') + dna_sequence.count('C')) / len(dna_sequence) * 100, 2),
+                'encodedSize': len(dna_sequence)
+            },
+            'quality': {
+                'status': 'success',
+                'message': 'DNA sequence successfully encoded'
+            }
         })
         
     except Exception as e:

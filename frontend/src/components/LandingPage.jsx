@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Binary, Code, Database, Dna, ArrowRight, Download, ChevronRight, User, LogOut } from 'lucide-react';
+import { Dna, User, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DnaAnimation from './DnaAnimation';
 
@@ -40,9 +40,8 @@ const Header = () => {
             <span className="ml-2 text-xl font-bold text-white">DNAStoreAI</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link to="/how-it-works" className="text-white hover:text-indigo-300">How It Works</Link>
-            <a href="#pricing" className="text-white hover:text-indigo-300">Pricing</a>
-            <a href="#docs" className="text-white hover:text-indigo-300">Documentation</a>
+            <Link to="/" className="text-white hover:text-indigo-300">Home</Link>
+            <Link to="/pricing" className="text-white hover:text-indigo-300">Pricing</Link>
             {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 bg-indigo-900/50 px-4 py-2 rounded-lg">
@@ -58,10 +57,12 @@ const Header = () => {
                 </button>
               </div>
             ) : (
-              <>
-                <Link to="/signin" className="px-4 py-2 text-white hover:text-indigo-300">Sign in</Link>
-                <Link to="/signup" className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Sign up</Link>
-              </>
+              <div className="flex items-center space-x-4">
+                <Link to="/signin" className="text-white hover:text-indigo-300">Sign In</Link>
+                <Link to="/signup" className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
         </div>
@@ -84,7 +85,7 @@ const Hero = () => (
           Convert your digital files into biologically viable DNA sequences using our ML-powered DNA Data Storage technology.
         </p>
         <div className="mt-10 flex justify-center space-x-4">
-          <Link to="/dna-operations" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+          <Link to="/dna-options" className="px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
             Try It Now
           </Link>
           <Link to="/ml-model" className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-indigo-900 transition-colors">

@@ -1,134 +1,150 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Dna, Mail, Lock, User, ArrowLeft } from 'lucide-react';
-import DnaAnimation from './DnaAnimation';
+import { Link, useLocation } from 'react-router-dom';
+import { Dna } from 'lucide-react';
 
-const Auth = ({ mode }) => {
+const Auth = () => {
+  const location = useLocation();
+  const isSignUp = location.pathname === '/signup';
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    name: mode === 'signup' ? '' : undefined
+    name: isSignUp ? '' : undefined,
+    confirmPassword: isSignUp ? '' : undefined
   });
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-
-    try {
-      // Here you would typically make an API call to your backend
-      console.log('Form submitted:', formData);
-      navigate('/dna-encoder');
-    } catch (err) {
-      setError(err.message || 'An error occurred');
-    }
+    // Handle authentication logic here
+    console.log('Form submitted:', formData);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Animation */}
-      <DnaAnimation />
-
-      {/* Main Content */}
-      <main className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full">
-          <div className="bg-indigo-900/50 backdrop-blur-sm rounded-xl p-8 shadow-xl">
-            <div className="text-center mb-8">
-              <Dna className="h-12 w-12 text-indigo-500 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-white">
-                {mode === 'signup' ? 'Create Account' : 'Welcome Back'}
-              </h1>
-              <p className="mt-2 text-indigo-200">
-                {mode === 'signup' 
-                  ? 'Join us to start encoding your data in DNA'
-                  : 'Sign in to continue your DNA encoding journey'}
-              </p>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-black">
+      <div className="relative z-10">
+        {/* Navigation */}
+        <nav className="fixed w-full bg-black/80 backdrop-blur-sm z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex items-center">
+                <Link to="/" className="flex items-center">
+                  <Dna className="h-8 w-8 text-indigo-600" />
+                  <span className="ml-2 text-xl font-bold text-white">DNAStoreAI</span>
+                </Link>
+              </div>
             </div>
+          </div>
+        </nav>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {mode === 'signup' && (
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-indigo-400" />
+        {/* Main Content */}
+        <main className="pt-32 pb-12">
+          <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-8">
+              <div className="text-center">
+                <h1 className="text-3xl font-bold text-white">
+                  {isSignUp ? 'Create an Account' : 'Sign In to Your Account'}
+                </h1>
+                <p className="mt-2 text-indigo-200">
+                  {isSignUp 
+                    ? 'Join DNAStoreAI to start encoding your data'
+                    : 'Welcome back! Please sign in to continue'
+                  }
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                {isSignUp && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
                   </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">
+                    Email Address
+                  </label>
                   <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
+                    type="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
-                    placeholder="Full Name"
-                    className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required
                   />
                 </div>
-              )}
 
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-indigo-400" />
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
                 </div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email Address"
-                  className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
 
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-indigo-400" />
+                {isSignUp && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300">
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="mt-1 block w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <button
+                    type="submit"
+                    className="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    {isSignUp ? 'Create Account' : 'Sign In'}
+                  </button>
                 </div>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Password"
-                  className="w-full pl-10 pr-4 py-3 bg-indigo-800/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
-                />
-              </div>
 
-              {error && (
-                <div className="text-red-400 text-sm text-center">
-                  {error}
+                <div className="text-center">
+                  <p className="text-gray-300">
+                    {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+                    <Link
+                      to={isSignUp ? '/signin' : '/signup'}
+                      className="text-indigo-400 hover:text-indigo-300"
+                    >
+                      {isSignUp ? 'Sign In' : 'Sign Up'}
+                    </Link>
+                  </p>
                 </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-900 transition-colors"
-              >
-                {mode === 'signup' ? 'Create Account' : 'Sign In'}
-              </button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-indigo-200">
-                {mode === 'signup' ? 'Already have an account?' : "Don't have an account?"}
-                <Link
-                  to={mode === 'signup' ? '/signin' : '/signup'}
-                  className="ml-2 text-indigo-400 hover:text-indigo-300"
-                >
-                  {mode === 'signup' ? 'Sign In' : 'Create Account'}
-                </Link>
-              </p>
+              </form>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };

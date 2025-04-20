@@ -1,0 +1,5 @@
+This is a test message for DNA encoding.
+It contains multiple lines and special characters: !@#$%^&*()
+Numbers: 1234567890
+Spaces and newlines are preserved.
+This will be converted to a DNA sequence. 

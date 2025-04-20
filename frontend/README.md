@@ -56,21 +56,6 @@ This will create an optimized production build in the `build` folder.
 - Lucide React (for icons)
 - React Dropzone (for file uploads)
 
-## Project Structure
-
-```
-frontend/
-├── public/
-├── src/
-│   ├── components/
-│   │   └── DnaAnimation.js
-│   ├── App.js
-│   ├── index.js
-│   └── index.css
-├── package.json
-├── tailwind.config.js
-└── postcss.config.js
-```
 
 ## Contributing
 
