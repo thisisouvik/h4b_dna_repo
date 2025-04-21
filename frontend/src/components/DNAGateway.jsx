@@ -115,5 +115,4 @@ const DNAGateway = () => {
     </div>
   );
 };
-
 export default DNAGateway; 
