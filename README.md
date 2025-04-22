@@ -1,6 +1,6 @@
 # DNA Encoder Application
 
-A web application for encoding and decoding text to DNA sequences.
+Digital files into biologically viable DNA sequences using our ML-powered DNA Data Storage technology
 
 ## Deployment Instructions
 
