@@ -64,5 +64,5 @@ A web application for encoding and decoding text to DNA sequences.
 - Multiple output formats
 - File upload/download
 
-<h1>Hack4Bengal</h1>
+
  
