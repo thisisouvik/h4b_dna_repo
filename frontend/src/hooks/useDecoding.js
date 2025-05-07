@@ -44,3 +44,4 @@ export const useDecoding = (formData, selectedFile) => {
 
   return { isProcessing, handleDecode, error };
 }; 
+
